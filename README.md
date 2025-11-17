@@ -48,16 +48,7 @@ This project is configured for automatic deployment to GitHub Pages using GitHub
 3. Under "Source", select **"GitHub Actions"**
 4. The workflow will automatically deploy the `public/` directory on every push to `main`
 
-The visualization will be available at: `https://<your-username>.github.io/<repository-name>/geoid_globe.html`
-
-### Manual Deployment
-
-If you prefer to deploy manually:
-
-```bash
-# The workflow runs automatically on push, but you can also trigger it manually
-# from the Actions tab in your GitHub repository
-```
+The visualization will be available at: [https://fmazzoni.github.io/geoid-globe/](https://fmazzoni.github.io/geoid-globe/)
 
 ## Project Structure
 
