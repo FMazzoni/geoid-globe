@@ -231,6 +231,7 @@ let colorMin = null;
 let colorMax = null;
 let useUnlit = true;
 let rotationSpeed = 0.5;
+let brightness = 1.5; // Brightness multiplier for unlit colors
 
 // Scientific colormap implementations
 // These are perceptually uniform colormaps suitable for scientific visualization
@@ -504,6 +505,13 @@ function updateGeometry() {
         // Color uses custom range if set
         const normalizedHeightForColor = colorRange > 0 ? Math.max(0, Math.min(1, (height - colorMinH) / colorRange)) : 0.5;
         let [r, g, b] = getColor(normalizedHeightForColor, currentColormap);
+        
+        // Apply brightness multiplier for unlit colors
+        if (useUnlit) {
+            r = Math.min(1, r * brightness);
+            g = Math.min(1, g * brightness);
+            b = Math.min(1, b * brightness);
+        }
         
         colors[i * 3] = r;
         colors[i * 3 + 1] = g;
@@ -904,6 +912,7 @@ function getURLParams() {
         rotationSpeed: params.get('rotationSpeed') ? parseFloat(params.get('rotationSpeed')) : null,
         colormap: params.get('colormap') || null,
         unlit: params.get('unlit') !== null ? params.get('unlit') === 'true' : null,
+        brightness: params.get('brightness') ? parseFloat(params.get('brightness')) : null,
         wireframes: params.get('wireframes') !== null ? params.get('wireframes') === 'true' : null,
         wireframesData: params.get('wireframesData') || null,
         colorMin: params.get('colorMin') ? parseFloat(params.get('colorMin')) : null,
@@ -918,6 +927,7 @@ function updateURL() {
     if (rotationSpeed !== 0.5) params.set('rotationSpeed', rotationSpeed.toString());
     if (currentColormap !== 'viridis') params.set('colormap', currentColormap);
     if (!useUnlit) params.set('unlit', 'false');
+    if (brightness !== 1.5) params.set('brightness', brightness.toString());
     if (showWireframes) params.set('wireframes', 'true');
     if (colorMin !== null) params.set('colorMin', colorMin.toString());
     if (colorMax !== null) params.set('colorMax', colorMax.toString());
@@ -935,6 +945,7 @@ const rotationSpeedSlider = document.getElementById('rotationSpeed');
 const rotationSpeedValue = document.getElementById('rotationSpeedValue');
 const colormapSelect = document.getElementById('colormapSelect');
 const unlitColorsCheckbox = document.getElementById('unlitColors');
+const brightnessInput = document.getElementById('brightness');
 const showWireframesCheckbox = document.getElementById('showWireframes');
 const colorMinInput = document.getElementById('colorMin');
 const colorMaxInput = document.getElementById('colorMax');
@@ -959,6 +970,10 @@ if (urlParams.colormap !== null) {
 if (urlParams.unlit !== null) {
     useUnlit = urlParams.unlit;
     unlitColorsCheckbox.checked = useUnlit;
+}
+if (urlParams.brightness !== null) {
+    brightness = Math.max(0.5, Math.min(3, urlParams.brightness));
+    brightnessInput.value = brightness;
 }
 if (urlParams.wireframes !== null) {
     showWireframes = urlParams.wireframes;
@@ -1031,8 +1046,20 @@ colormapSelect.addEventListener('change', (e) => {
 unlitColorsCheckbox.addEventListener('change', (e) => {
     useUnlit = e.target.checked;
     updateMaterial();
-    updateGeometry();
+    updateGeometry(); // Recalculate colors with/without brightness
     updateURL();
+});
+
+brightnessInput.addEventListener('change', (e) => {
+    const value = parseFloat(e.target.value);
+    if (!isNaN(value)) {
+        brightness = Math.max(0.5, Math.min(3, value));
+        e.target.value = brightness;
+        if (useUnlit) {
+            updateGeometry(); // Update colors with new brightness
+        }
+        updateURL();
+    }
 });
 
 showWireframesCheckbox.addEventListener('change', (e) => {
