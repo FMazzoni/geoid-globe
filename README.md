@@ -2,6 +2,8 @@
 
 A 3D interactive visualization of Earth's geoid using Three.js, Python, and Pixi. The geoid represents the shape that the ocean surface would assume if it were at rest—an equipotential surface of Earth's gravity field.
 
+The visualization will be available at: [https://fmazzoni.github.io/geoid-globe/](https://fmazzoni.github.io/geoid-globe/)
+
 ## Overview
 
 This project visualizes the Earth's geoid undulation (deviation from a perfect ellipsoid) using:
@@ -36,19 +38,6 @@ pixi run preprocess
 # Open public/geoid_globe.html in a web browser
 # Or use: pixi run serve
 ```
-
-## Deployment
-
-This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
-
-### Setup GitHub Pages
-
-1. Push your code to GitHub
-2. Go to your repository → **Settings** → **Pages**
-3. Under "Source", select **"GitHub Actions"**
-4. The workflow will automatically deploy the `public/` directory on every push to `main`
-
-The visualization will be available at: [https://fmazzoni.github.io/geoid-globe/](https://fmazzoni.github.io/geoid-globe/)
 
 ## Project Structure
 
